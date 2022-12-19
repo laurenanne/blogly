@@ -93,14 +93,3 @@ def update_user(user_id):
     db.session.commit()
 
     return redirect('/users')
-
-    # @app.route("/<int:pet_id>")
-    # def show_pet(pet_id):
-    #     """Show details about a single pet"""
-    #     pet = Pet.query.get_or_404(pet_id)
-    #     return render_template("details.html", pet=pet)
-
-    # @app.route("/species/<species_id>")
-    # def show_pets_by_species(species_id):
-    #     pets = Pet.get_by_species(species_id)
-    #     return render_template("species.html", pets=pets, species=species_id)
