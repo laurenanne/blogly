@@ -70,7 +70,7 @@ button.btn.btn-cancel{
     color: rgb(97, 179, 198);
     border-radius: 5px;
     border: 1px solid rgb(97, 179, 198); 
-    padding: 10px 18px;
+    padding: 8px 15px;
   
 }
 
@@ -81,7 +81,7 @@ button.btn.btn-edit{
     border-radius: 5px;
     border: none;
     padding: 8px 15px;
- 
+   
 }
 
 
@@ -91,6 +91,7 @@ button.btn.btn-delete{
     border-radius: 5px;
     border: none;
     padding: 8px 15px;
+
    
 }
 
@@ -134,5 +135,27 @@ section.data {
     height: 200px;
     position:absolute;
     
+
+}
+
+section.post-info {
+    display: inline-block;
+    border-radius: 5px;
+    background-color: rgba(254, 254, 254, 0.99);
+    margin-left: 2%;
+    width: 400px;
+    height: 200px;
+    position:absolute;
+    top: 200px;
+
+}
+
+section.post {
+    display: inline-block;
+    border-radius: 5px;
+    background-color: rgba(254, 254, 254, 0.99);
+    margin-left: 2%;
+    width: 75%;
+  
 
 }

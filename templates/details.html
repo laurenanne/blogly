@@ -14,12 +14,27 @@
     <form action="/users/{{user.id}}/edit">
         <button class="btn btn-edit">Edit</button>
     </form>
-    <form action="/users/{{user.id}}/delete">
+    <form action="/users/{{user.id}}/delete" , method="POST">
         <button class="btn btn-delete">Delete</button>
     </form>
 
-
 </section>
+
+<section class="post-info">
+    <p>Posts</p>
+    <ul>
+        {% for post in user.posts%}
+        <li>
+            <a href="/posts/{{post.id}}">{{post.title}}</a>
+        </li>
+        {%endfor %}
+    </ul>
+    <form action='/users/{{user.id}}/posts/new'>
+        <button class="btn btn-edit">Add Post</button>
+    </form>
+</section>
+
+
 
 
 {% endblock %}
