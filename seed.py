@@ -1,6 +1,6 @@
-"""Seed file to make sample data for pets db."""
+"""Seed file to make sample data for blogly db."""
 
-from models import User, Post, db
+from models import User, Post, Tag, PostTag, db
 from app import app
 
 # Create all tables
@@ -11,7 +11,8 @@ with app.app_context():
 # If table isn't empty, empty it
     User.query.delete()
     Post.query.delete()
-
+    Tag.query.delete()
+    PostTag.query.delete()
 
 # Add users
 santa = User(first_name="Santa", last_name="Claus",

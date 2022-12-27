@@ -2,7 +2,7 @@
 
 from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 from datetime import datetime
 
 app = Flask(__name__)
@@ -23,6 +23,9 @@ def home():
     return redirect('/users')
 
 
+"""routes for useres"""
+
+
 @app.route('/users')
 def list_users():
     users = User.query.all()
@@ -41,7 +44,7 @@ def new_user():
     last_name = request.form['last_name']
     image_url = request.form['image_url']
 
-    if (first_name is "" or last_name is ""):
+    if (first_name == "" or last_name == ""):
         flash('Must submit full name')
         return redirect('/users/new')
 
@@ -96,6 +99,9 @@ def update_user(user_id):
     return redirect('/users')
 
 
+"""routes for posts"""
+
+
 @app.route('/users/<int:user_id>/posts/new')
 def show_post_form(user_id):
     user = User.query.get_or_404(user_id)
@@ -107,11 +113,11 @@ def new_post(user_id):
     title = request.form['title']
     content = request.form['content']
 
-    if (title is ""):
+    if (title == ""):
         flash('Your post must have a title')
         return redirect(f'/users/{user_id}/posts/new')
 
-    if (content is ""):
+    if (content == ""):
         flash('Your post must have content')
         return redirect(f'/users/{user_id}/posts/new')
 
@@ -163,3 +169,72 @@ def update_post(post_id):
     db.session.commit()
 
     return redirect(f'/posts/{post.id}')
+
+
+"""routes for tags """
+
+
+@app.route('/tags')
+def list_tags():
+    tags = Tag.query.all()
+    return render_template('tag.html', tags=tags)
+
+
+@app.route('/tags/<int:tag_id>')
+def new_tag(tag_id):
+    tag = Tag.query.get_or_404(tag_id)
+    return render_template('tag-details.html', tag=tag)
+
+
+@app.route('/tags/new')
+def display_tag_form():
+
+    return render_template('tag-form.html')
+
+
+@app.route('/tags/new', methods=['POST'])
+def show_tag():
+    name = request.form['name']
+
+    if (name == ""):
+        flash('Your tag cannot be blank')
+        return redirect(f'/tags/new')
+
+    else:
+        new_tag = Tag(name=name)
+
+        db.session.add(new_tag)
+        db.session.commit()
+
+        return redirect('/tags')
+
+
+@app.route('/tags/<int:tag_id>/edit')
+def edit_tag(tag_id):
+    tag = Tag.query.get_or_404(tag_id)
+
+    return render_template('edit-tag.html', tag=tag)
+
+
+@app.route('/tags/<int:tag_id>/delete', methods=['POST'])
+def delete_tag(tag_id):
+    with app.app_context():
+        tag = Tag.query.get_or_404(tag_id)
+
+        db.session.delete(tag)
+        db.session.commit()
+
+    return redirect('/tags')
+
+
+@app.route('/tags/<int:tag_id>/edit', methods=['POST'])
+def update_tag(tag_id):
+
+    tag = Tag.query.get_or_404(tag_id)
+
+    tag.name = request.form['name']
+
+    db.session.add(tag)
+    db.session.commit()
+
+    return redirect(f'/tags/{tag_id}')

@@ -14,7 +14,16 @@
             <label for="content">Content</label>
             <input type="text" name="content" value="{{post.content}}">
         </div>
+        <div>
+            {%for tag in post.post_t%}
+            <input type="checkbox" name="{{tag.name}}">
+            <label for="{{tag.name}}">{{tag.name}}</label>
+            {%endfor%}
+        </div>
+
+
         <button class="btn btn-edit">Edit</button>
+
 
     </form>
     <form action='/users/{{post.user_key}}'>
