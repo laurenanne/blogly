@@ -44,7 +44,7 @@ def new_user():
     last_name = request.form['last_name']
     image_url = request.form['image_url']
 
-    if (first_name == "" or last_name == ""):
+    if (first_name is "" or last_name is ""):
         flash('Must submit full name')
         return redirect('/users/new')
 
@@ -93,10 +93,15 @@ def update_user(user_id):
     user.last_name = request.form['last_name']
     user.image_url = request.form['image_url']
 
-    db.session.add(user)
-    db.session.commit()
+    if (user.first_name is "" or user.last_name is ""):
+        flash('Must submit full name')
+        return redirect(f'/users/{user_id}/edit')
 
-    return redirect('/users')
+    else:
+        db.session.add(user)
+        db.session.commit()
+
+        return redirect('/users')
 
 
 """routes for posts"""
@@ -105,31 +110,33 @@ def update_user(user_id):
 @app.route('/users/<int:user_id>/posts/new')
 def show_post_form(user_id):
     user = User.query.get_or_404(user_id)
-    return render_template('post-form.html', user=user)
+    tags = Tag.query.all()
+    return render_template('post-form.html', user=user, tags=tags)
 
 
 @app.route('/users/<int:user_id>/posts/new', methods=['POST'])
 def new_post(user_id):
     title = request.form['title']
     content = request.form['content']
+    tag_list = [int(num) for num in request.form.getlist('tags')]
+    tags = Tag.query.filter(Tag.id.in_(tag_list)).all()
 
-    if (title == ""):
+    if (title is ""):
         flash('Your post must have a title')
         return redirect(f'/users/{user_id}/posts/new')
 
-    if (content == ""):
+    if (content is ""):
         flash('Your post must have content')
         return redirect(f'/users/{user_id}/posts/new')
 
     else:
         new_post = Post(title=title,
-                        content=content, user_key=user_id)
+                        content=content, user_key=user_id, tags=tags)
 
-        with app.app_context():
-            db.session.add(new_post)
-            db.session.commit()
+        db.session.add(new_post)
+        db.session.commit()
 
-            return redirect(f'/posts/{new_post.id}')
+        return redirect(f'/posts/{new_post.id}')
 
 
 @app.route('/posts/<int:post_id>')
@@ -142,8 +149,9 @@ def show_post(post_id):
 @app.route('/posts/<int:post_id>/edit')
 def edit_post(post_id):
     post = Post.query.get_or_404(post_id)
+    tags = Tag.query.all()
 
-    return render_template('edit-post.html', post=post)
+    return render_template('edit-post.html', post=post, tags=tags)
 
 
 @app.route('/posts/<int:post_id>/delete', methods=["POST"])
@@ -164,9 +172,20 @@ def update_post(post_id):
 
     post.title = request.form['title']
     post.content = request.form['content']
+    tag_list = [int(num) for num in request.form.getlist('tags')]
+    post.tags = Tag.query.filter(Tag.id.in_(tag_list)).all()
 
-    db.session.add(post)
-    db.session.commit()
+    if (post.title is ""):
+        flash('Your post must have a title')
+        return redirect(f'/posts/{post_id}/edit')
+
+    if (post.content is ""):
+        flash('Your post must have content')
+        return redirect(f'/posts/{post_id}/edit')
+
+    else:
+        db.session.add(post)
+        db.session.commit()
 
     return redirect(f'/posts/{post.id}')
 
@@ -196,7 +215,7 @@ def display_tag_form():
 def show_tag():
     name = request.form['name']
 
-    if (name == ""):
+    if (name is ""):
         flash('Your tag cannot be blank')
         return redirect(f'/tags/new')
 

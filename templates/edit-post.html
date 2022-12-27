@@ -15,9 +15,9 @@
             <input type="text" name="content" value="{{post.content}}">
         </div>
         <div>
-            {%for tag in post.post_t%}
-            <input type="checkbox" name="{{tag.name}}">
-            <label for="{{tag.name}}">{{tag.name}}</label>
+            {%for tag in tags%}
+            <input type="checkbox" name="tags" value="{{tag.id}}" {% if tag in post.tags%} checked {%endif%}>
+            <label for="tags">{{tag.name}}</label>
             {%endfor%}
         </div>
 

@@ -40,7 +40,7 @@ class Post(db.Model):
     # post_tag = db.relationship('PostTag',
     #    backref = 'post')
 
-    post_t = db.relationship('Tag', secondary="post_tags", backref="post")
+    tags = db.relationship('Tag', secondary="post_tags", backref="posts")
 
     def __repr__(self):
         p = self
@@ -52,8 +52,6 @@ class Tag(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
-
-    p = db.relationship('PostTag', backref='t')
 
 
 class PostTag(db.Model):

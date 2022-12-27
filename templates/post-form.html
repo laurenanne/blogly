@@ -14,7 +14,14 @@
             <label for="content">Content</label>
             <input type="text" name="content">
         </div>
+        <div>
+            {%for tag in tags%}
+            <input type="checkbox" name="tags" value="{{tag.id}}">
+            <label for="tags">{{tag.name}}</label>
+            {%endfor%}
+        </div>
         <button class="btn btn-add">Add</button>
+
 
     </form>
 
